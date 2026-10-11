@@ -135,7 +135,6 @@ function App() {
   return (
     <div className="container">
       <h1>Student Management System</h1>
-      <p className="subtitle">Basic Monolithic Project (Spring Boot + JPA + MySQL + React + CSS)</p>
 
       {/* FORM CARD (Add / Update) */}
       <div className="card">
