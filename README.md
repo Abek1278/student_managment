@@ -89,9 +89,9 @@ flowchart TD
     DeleteDB --> Refresh
     ConfirmDel -- "No" --> Render
 
-    UserChoice -- "Click Calculate Total" --> GetTotal[GET /students/total]
-    GetTotal --> ServiceCalc[StudentService: Sum marks in loop]
-    ServiceCalc --> ShowTotal[Display Calculated Total on UI]
+    UserChoice -- "Click Calculate Average" --> GetAverage[GET /students/average]
+    GetAverage --> ServiceCalc[StudentService: Sum marks and divide by count]
+    ServiceCalc --> ShowAverage[Display Average Marks of Students on UI]
 
     Refresh --> Render
 ```
@@ -137,7 +137,7 @@ classDiagram
         +getAllStudents() List~Student~
         +updateStudent(Long id, Student studentDetails) Student
         +deleteStudent(Long id) void
-        +calculateTotalMarks() double
+        +calculateAverageMarks() double
     }
 
     class StudentController {
@@ -147,7 +147,7 @@ classDiagram
         +getAllStudents() List~Student~
         +updateStudent(Long id, Student student) Student
         +deleteStudent(Long id) String
-        +getTotalMarks() double
+        +getAverageMarks() double
     }
 
     StudentController --> StudentService : calls
@@ -165,13 +165,13 @@ classDiagram
 - **Student Directory (Read)**: Tabular presentation displaying all active records.
 - **Record Modification (Update)**: In-place form population allowing instant edits and updates.
 - **Record Removal (Delete)**: Safe deletion prompt using browser dialog confirmation.
-- **Aggregate Calculation (Exp 10)**: Server-side loop calculation summing marks across all enrolled students (`calculateTotalMarks()`).
+- **Aggregate Calculation (Exp 10)**: Server-side business logic calculating average marks across all enrolled students (`calculateAverageMarks()`).
 
 ### 4.2 Frontend Design (React + CSS)
 The user interface is contained inside [`frontend/src/App.js`](file:///home/abek_shek/Desktop/student_managment/frontend/src/App.js) and styled via [`frontend/src/App.css`](file:///home/abek_shek/Desktop/student_managment/frontend/src/App.css):
 - **Form Card**: Header "Add New Student" or "Update Student Record" with standard input fields and action buttons.
 - **Table Card**: Styled table with columns `ID`, `Roll No`, `Name`, `Email`, `Marks`, and `Actions`.
-- **Summary Box**: Dedicated button and highlighted card for displaying the total marks calculation.
+- **Summary Box**: Dedicated button and card displaying the average marks of students.
 
 ### 4.3 Database Design (MySQL)
 
@@ -197,11 +197,11 @@ The backend strictly follows the **5-component monolithic pattern** taught in Ex
 2. **`StudentRepository.java` (Repository Package)**:
    An interface extending `JpaRepository<Student, Long>`, providing pre-built database CRUD methods (`save`, `findAll`, `findById`, `deleteById`).
 3. **`StudentService.java` (Service Package)**:
-   Annotated with `@Service`. Encapsulates business logic, including iterating over all records with a `for` loop to compute the aggregate total.
+   Annotated with `@Service`. Encapsulates business logic, including iterating over records to compute the class average.
 4. **`StudentController.java` (Controller Package)**:
    Annotated with `@RestController`, `@RequestMapping("/students")`, and `@CrossOrigin(origins = "*")`. Exposes REST API endpoints.
 5. **`application.properties` (Resources)**:
-   Configures the MySQL database URL, database credentials, `ddl-auto=update`, and `server.port=8080`.
+   Configures the MySQL database URL (`username=root`, `password=root`), `ddl-auto=update`, and `server.port=8080`.
 
 ### REST API Endpoints
 
@@ -211,7 +211,7 @@ The backend strictly follows the **5-component monolithic pattern** taught in Ex
 | **POST** | `/students` | Register a new student | `Student JSON` | `Created Student JSON` |
 | **PUT** | `/students/{id}` | Update an existing student | `Student JSON` | `Updated Student JSON` |
 | **DELETE** | `/students/{id}` | Delete a student by ID | None | `String ("Student deleted successfully")` |
-| **GET** | `/students/total` | Calculate total marks | None | `double (e.g. 260.5)` |
+| **GET** | `/students/average` | Calculate average marks | None | `double (e.g. 93.75)` |
 
 ---
 
@@ -287,13 +287,17 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public double calculateTotalMarks() {
+    public double calculateAverageMarks() {
         List<Student> students = studentRepository.findAll();
+        if (students.isEmpty()) {
+            return 0.0;
+        }
         double total = 0;
         for (Student student : students) {
             total = total + student.getMarks();
         }
-        return total;
+        double avg = total / students.size();
+        return Math.round(avg * 100.0) / 100.0;
     }
 }
 ```
@@ -314,6 +318,7 @@ const [rollNo, setRollNo] = useState('');
 const [name, setName] = useState('');
 const [email, setEmail] = useState('');
 const [marks, setMarks] = useState('');
+const [averageMarks, setAverageMarks] = useState(null);
 ```
 
 ---
@@ -326,7 +331,6 @@ const [marks, setMarks] = useState('');
 ```
 +-----------------------------------------------------------------------------------------+
 |                                Student Management System                                |
-|        Basic Monolithic Project (Spring Boot + JPA + MySQL + React + CSS)               |
 +-----------------------------------------------------------------------------------------+
 |  Add New Student                                                                        |
 |  Roll Number:                          [ 101                      ]                     |
@@ -343,8 +347,8 @@ const [marks, setMarks] = useState('');
 |  | 2  | 102     | Sneha Patil      | sneha@gmail.com   | 92.0  | [ Edit ] [ Delete ] |  |
 |  +----+---------+------------------+-------------------+-------+---------------------+  |
 |                                                                                         |
-|  [ Calculate Total Marks ]                                                              |
-|  Total Marks of All Students: ₹180.5 / 180.5 pts                                        |
+|  [ Calculate Average Marks ]                                                            |
+|  Average Marks of Students: 90.25                                                       |
 +-----------------------------------------------------------------------------------------+
 ```
 
@@ -359,7 +363,7 @@ When entering an email lacking `@` or `.` (e.g. `rahulgmailcom`):
 
 ### 3. Thunder Client / REST API Verification
 - `POST http://localhost:8080/students` $\longrightarrow$ `200 OK` (Record inserted into MySQL)
-- `GET http://localhost:8080/students/total` $\longrightarrow$ `180.5` (Computed sum of all students' marks)
+- `GET http://localhost:8080/students/average` $\longrightarrow$ `90.25` (Computed average of all students' marks)
 
 ---
 
@@ -464,5 +468,5 @@ Make sure the following tools are installed:
 2. **View Students**: The new student appears immediately in the table below.
 3. **Edit Student**: Click **Edit** next to any record, modify the values in the form, and click **Update Student**.
 4. **Delete Student**: Click **Delete** next to any student and confirm the alert popup.
-5. **Calculate Total Marks**: Click **Calculate Total Marks** to invoke the backend business logic and view the sum of marks.
+5. **Calculate Average Marks**: Click **Calculate Average Marks** to invoke the backend business logic and view the average marks of all students.
 
