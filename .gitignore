@@ -1,0 +1,18 @@
+# Node
+frontend/node_modules/
+frontend/build/
+frontend/.npm
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# Maven / Java
+backend/target/
+backend/.mvn/
+backend/*.log
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+.DS_Store

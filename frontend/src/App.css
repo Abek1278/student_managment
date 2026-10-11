@@ -1,0 +1,170 @@
+/* Simple, beginner-friendly CSS based on Experiment 5, 7, and 10 */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #555;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+/* Card layout (Clean and basic) */
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #34495e;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* Buttons */
+.btn-group {
+  margin-top: 15px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+  color: white;
+  margin-left: 10px;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-calc {
+  background-color: #27ae60;
+  color: white;
+  margin-top: 10px;
+}
+
+.btn-calc:hover {
+  background-color: #219653;
+}
+
+.btn-edit {
+  background-color: #f39c12;
+  color: white;
+  padding: 5px 10px;
+  margin-right: 5px;
+}
+
+.btn-edit:hover {
+  background-color: #d68910;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+  padding: 5px 10px;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
+
+/* Table Design (from Experiment 5) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+table th {
+  background-color: #34495e;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Summary Card */
+.total-box {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #e8f8f5;
+  border: 1px solid #a3e4d7;
+  border-radius: 5px;
+}
+
+.total-box h3 {
+  margin: 0;
+  color: #16a085;
+}
+
+.no-data {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  padding: 15px;
+}
