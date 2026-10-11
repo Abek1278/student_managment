@@ -44,7 +44,21 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    // 5. Calculate Total Marks (Exact business logic pattern from Exp 10 Step 12: loop and sum)
+    // 5. Calculate Average Marks (Business logic pattern from Exp 10)
+    public double calculateAverageMarks() {
+        List<Student> students = studentRepository.findAll();
+        if (students.isEmpty()) {
+            return 0.0;
+        }
+        double total = 0;
+        for (Student student : students) {
+            total = total + student.getMarks();
+        }
+        double avg = total / students.size();
+        return Math.round(avg * 100.0) / 100.0; // round to 2 decimal places
+    }
+
+    // Calculate Total Marks
     public double calculateTotalMarks() {
         List<Student> students = studentRepository.findAll();
         double total = 0;

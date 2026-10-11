@@ -14,8 +14,8 @@ function App() {
   // State to track if editing an existing student (null means adding new)
   const [editId, setEditId] = useState(null);
 
-  // State to display calculated total marks (Exp 10 calculateTotal feature)
-  const [totalMarks, setTotalMarks] = useState(null);
+  // State to display calculated average marks
+  const [averageMarks, setAverageMarks] = useState(null);
 
   // Backend API URL (Matches Exp 10 @RequestMapping("/students"))
   const API_URL = 'http://localhost:8080/students';
@@ -115,12 +115,12 @@ function App() {
     }
   };
 
-  // Calculate Total Marks (Exp 10 calculateTotal pattern: calls GET /students/total)
-  const handleCalculateTotal = () => {
-    fetch(`${API_URL}/total`)
+  // Calculate Average Marks (calls GET /students/average)
+  const handleCalculateAverage = () => {
+    fetch(`${API_URL}/average`)
       .then((response) => response.json())
-      .then((data) => setTotalMarks(data))
-      .catch((error) => console.error('Error calculating total:', error));
+      .then((data) => setAverageMarks(data))
+      .catch((error) => console.error('Error calculating average:', error));
   };
 
   // Reset Form
@@ -241,12 +241,12 @@ function App() {
 
         {/* Calculation Section from Exp 10 */}
         <div style={{ marginTop: '20px' }}>
-          <button className="btn btn-calc" onClick={handleCalculateTotal}>
-            Calculate Total Marks
+          <button className="btn btn-calc" onClick={handleCalculateAverage}>
+            Calculate Average Marks
           </button>
-          {totalMarks !== null && (
+          {averageMarks !== null && (
             <div className="total-box">
-              <h3>Total Marks of All Students: ₹{totalMarks} / {totalMarks} pts</h3>
+              <h3>Average Marks of Students: {averageMarks}</h3>
             </div>
           )}
         </div>

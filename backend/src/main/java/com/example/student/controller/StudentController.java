@@ -43,7 +43,13 @@ public class StudentController {
         return "Student deleted successfully";
     }
 
-    // 5. GET /students/total : Calculate total marks (Exp 10 Step 13 pattern)
+    // 5. GET /students/average : Calculate average marks
+    @GetMapping("/average")
+    public double getAverageMarks() {
+        return studentService.calculateAverageMarks();
+    }
+
+    // GET /students/total : Calculate total marks (Exp 10 Step 13 pattern)
     @GetMapping("/total")
     public double getTotalMarks() {
         return studentService.calculateTotalMarks();
